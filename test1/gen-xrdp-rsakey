@@ -1,0 +1,27 @@
+#!/bin/sh
+
+PIDDIR=/var/run/xrdp
+USERID=xrdp
+RSAKEYS=/etc/xrdp/rsakeys.ini
+LOGFILE=/var/log/gen-xrdp-rsakey.log
+
+if [ "$(id -u)" = "0" ]; then
+    # Check for pid dir
+    if [ ! -d $PIDDIR ] ; then
+        mkdir $PIDDIR
+    fi
+    chown $USERID:$USERID $PIDDIR
+
+    # Check for rsa key
+    if [ ! -f $RSAKEYS ] || cmp $RSAKEYS /xrdp/xrdp/rsakeys.ini > /dev/null; then
+        echo "Generating xrdp RSA keys..." > $LOGFILE
+        (umask 077 ; xrdp-keygen xrdp $RSAKEYS)
+        chown $USERID:$USERID $RSAKEYS
+        if [ ! -f $RSAKEYS ] ; then
+            echo "could not create $RSAKEYS" > $LOGFILE
+            exit 1
+        fi
+        echo "done." > $LOGFILE
+    fi
+fi
+exit 0
