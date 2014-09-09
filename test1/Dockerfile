@@ -37,7 +37,8 @@ RUN cd xrdp && rmdir librfxcodec && \
 	cp -a src/librfxencode.so src/librfxencode.a /usr/lib && ldconfig
 # add xrdp(RDP server)
 RUN apt-get install -y libavcodec-dev libavformat-dev
-RUN cd xrdp && ./bootstrap && ./configure --enable-rfxcodec && make && make install
+RUN cd /xrdp && ./bootstrap && ./configure --enable-rfxcodec && make && make install
+RUN cd /xrdp/xorg/X11R7.6 && ./buildx.sh default && cd rdp && make install
 RUN useradd sconnect -m -s /bin/bash ; echo sconnect:password | chpasswd
 ADD Xclients /etc/skel/.Xclients
 ADD xrdp.conf /etc/supervisor/conf.d/ 
