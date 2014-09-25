@@ -14,8 +14,7 @@ RUN cd /noVNC/utils && make
 ADD vncsv.conf /etc/supervisor/conf.d/
 RUN mkdir /home/sconnect/.vnc
 ADD passwd /home/sconnect/.vnc/
-RUN chown -R sconnect.sconnect /home/sconnect/.vnc
-#    ln -s /etc/X11/Xsession /home/sconnect/.vnc/xstartup
+RUN chown -R sconnect.sconnect /home/sconnect/.vnc && chmod 600 /home/sconnect/.vnc/passwd
 EXPOSE 6080 
 CMD ["supervisord", "-n" ]
 #for debug
