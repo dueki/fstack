@@ -5,17 +5,21 @@ RUN cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN apt-get update && \
     apt-get install -y wget vim git gcc make net-tools supervisor \
     x11vnc xvfb openbox gtk2-engines-murrine ttf-ubuntu-font-family \ 
-    xfonts-shinonome fonts-takao gdebi-core
+    xfonts-shinonome fonts-takao gdebi-core firefox
 RUN \
     wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    gdebi google-chrome-stable_current_amd64.deb && rm *.deb
+    echo y | gdebi google-chrome-stable_current_amd64.deb && rm *.deb
 RUN \
     wget http://javadl.sun.com/webapps/download/AutoDL?BundleId=95116 -O java.tar.gz && \
     mkdir /usr/java && cd /usr/java && tar xvf /java.tar.gz && \
     JAVA_PLUGIN=`ls /usr/java/*/lib/amd64/libnpjp2.so` && \
     mkdir -p /opt/google/chrome/plugins && ln -s $JAVA_PLUGIN /opt/google/chrome/plugins/libnpjp2.so  
-
 RUN useradd sconnect -m -s /bin/bash ; echo sconnect:password | chpasswd
+RUN \
+    JAVA_PLUGIN=`ls /usr/java/*/lib/amd64/libnpjp2.so` && \
+    mkdir -p /home/sconnect/.mozilla/plugins && \
+    ln -s $JAVA_PLUGIN /home/sconnect/.mozilla/plugins/libnpjp2.so && \
+    chown -R sconnect.sconnect /home/sconnect/.mozilla 
 RUN \
     git clone https://github.com/kanaka/noVNC.git
 ADD self.pem /noVNC/utils/
