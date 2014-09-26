@@ -4,11 +4,15 @@ MAINTAINER Daisuke,Ueki <d.ueki@appliedelectroics.jp>
 RUN cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 RUN apt-get update && \
     apt-get install -y wget vim git gcc make net-tools supervisor \
-    x11vnc xvfb openbox gtk2-engines-murrine ttf-ubuntu-font-family chromium-browser-l10n
+    x11vnc xvfb openbox gtk2-engines-murrine ttf-ubuntu-font-family chromium-browser-l10n \ 
+    xfonts-shinonome fonts-takao 
 #RUN apt-get install -y x11vnc vnc4server red red red red....
 #RUN apt-get install -y x11vnc xvfb openbox chromium-browser-l10n
 RUN useradd sconnect -m -s /bin/bash ; echo sconnect:password | chpasswd
-#RUN mkdir -p /home/sconnect/.vnc && chown -R sconnect:sconnect /home/sconnect/.vnc && \
+#RUN mkdir -p /home/sconnect/.vnc && chown -R sconnect:sconnect /home/sconnect/.vnc && 
+RUN \
+ln -is /usr/lib/jvm/java-1.7.0-openjdk-amd64/jre/lib/amd64/IcedTeaPlugin.so \
+/usr/lib/chromium-browser/plugins/IcedTeaPlugin.so
 RUN git clone https://github.com/kanaka/noVNC.git
 ADD self.pem /noVNC/utils/
 RUN cd /noVNC/utils && make
